@@ -1,0 +1,50 @@
+<mat-toolbar class="example-header">
+  <button type="button" mat-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <p><a [routerLink]="['/login']">Logout</a></p>
+</mat-toolbar>
+
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        <mat-checkbox class="checklist-leaf-node"
+                      [checked]="checklistSelection.isSelected(node)"
+                      (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+      </mat-tree-node>
+
+      <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        <mat-form-field>
+          <input matInput #itemValue placeholder="New item...">
+        </mat-form-field>
+        <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+      </mat-tree-node>
+
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle
+                [attr.aria-label]="'toggle ' + node.filename">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        <mat-checkbox [checked]="descendantsAllSelected(node)"
+                      [indeterminate]="descendantsPartiallySelected(node)"
+                      (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+        <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+      </mat-tree-node>
+    </mat-tree>
+
+    <a [routerLink]=" ['/flows'] " (click)="sidenav.toggle()"
+       [routerLinkActive]="['active']">
+      Flow 1
+    </a>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="app-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,19 @@
+﻿<!--<h2 class="logo-arounsee">Add User</h2>-->
+<form class="register-form" [formGroup]="registerForm" (ngSubmit)="register()" novalidate>
+  <mat-form-field>
+    <input matInput type="text" formControlName="firstName" placeholder="firstName" class="form-control" required>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" formControlName="lastName" placeholder="lastName" class="form-control" required>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" formControlName="userName" placeholder="userName" class="form-control" required>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" formControlName="password" placeholder="password" class="form-control" required>
+  </mat-form-field>
+  <div class="button-container">
+    <button [disabled]="loading" class="register-button" mat-button>Register</button>
+    <button [routerLink]="['/users']" mat-button>Cancel</button>
+  </div>
+</form>

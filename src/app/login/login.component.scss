@@ -1,0 +1,27 @@
+.login-form .reg-button{
+
+}
+
+.login-form /deep/ .mat-input-placeholder {
+  color: white !important;
+}
+
+.login-form /deep/ .mat-input-underline {
+  border-color: white !important;
+}
+
+.login-form .login-button {
+  max-width: 220px;
+}
+
+.login-form .mat-form-field {
+  display: block;
+  max-width: 300px;
+  width: 90%;
+  margin: 0 auto 30px auto;
+}
+
+.login-form .button-container {
+  margin: auto;
+  display: inherit;
+}
