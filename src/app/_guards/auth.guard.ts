@@ -11,8 +11,8 @@ export class AuthGuard implements CanActivate {
     const user = localStorage.getItem('currentUser');
     if (user) {
       const userObj = JSON.parse(user);
-      if ((routeRoles[0] === 'admin' && userObj.message === 'admin') ||
-          (routeRoles[0] === 'user' && userObj.message !== 'admin')) {
+      if ((routeRoles[0] === 'admin' && userObj.userName === 'admin') ||
+          (routeRoles[0] === 'user' && userObj.userName !== 'admin')) {
         return true;
       }
     }

@@ -17,8 +17,8 @@ export class UserService {
     private authApi = `${apiUrl}/api/user`;
     constructor(private http: HttpClient) { }
 
-    getAll() {
-        return this.http.get<User[]>(`${apiUrl}/users`);
+   getAllUsers() {
+        return this.http.get<IUser[]>(`${this.authApi}/getAll`);
     }
 
    create(user: IUser) {

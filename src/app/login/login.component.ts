@@ -51,8 +51,10 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                  if (data.message === 'admin') {
-                    this.router.navigate(['home']);
+                  if (data.userName === 'admin') {
+                    this.router.navigate(['admin']);
+                  } else {
+                    this.router.navigate(['']);
                   }
                 },
                 error => {

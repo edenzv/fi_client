@@ -33,12 +33,12 @@ import { UserPageComponent } from './user-page/user-page.component';
 // ];
 
 const appRoutes: Routes = [
-  { path: '', component: UserPageComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard],
+  { path: 'admin', component: AdminPageComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard]},
+  { path: 'add', component: AddUserComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
+  { path: '', component: UserPageComponent, data: { roles: ['user'] }, canActivate: [AuthGuard],
     children: [
       { path: 'flows', component: FlowsComponent }
     ]},
-  { path: 'add', component: AddUserComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
-  { path: '', component: UserPageComponent, data: { roles: ['user'] }, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
 
   // otherwise redirect to home

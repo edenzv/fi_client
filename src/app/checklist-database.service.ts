@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { TresService } from './tres.service';
 
 /**
  * Node for to-do item
@@ -45,17 +46,31 @@ export class ChecklistDatabaseService {
 
   get data(): TodoItemNode[] { return this.dataChange.value; }
 
-  constructor() {
+  constructor(private tresService: TresService) {
     this.initialize();
   }
 
   initialize() {
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    //     file node as children.
-    const data = this.buildFileTree(TREE_DATA, 0);
 
-    // Notify the change.
-    this.dataChange.next(data);
+    this.tresService.getTres()
+      .subscribe(
+        (result) => {
+          const treeData = result.map((tre) => {
+            return {
+              [tre.ID]: null
+            };
+          });
+
+          // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
+          //     file node as children.
+          const data = this.buildFileTree(TREE_DATA, 0);
+
+          // Notify the change.
+          this.dataChange.next(data);
+        },
+        (error) => {
+          console.error(error);
+        });
   }
 
   /**
