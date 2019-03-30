@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { apiUrl } from './_services';
 
-interface ITre {
+export interface ITre {
   lnkCol0: string;
   prnt: string;
   lnkCol0tl: string;
@@ -21,9 +22,29 @@ interface ITre {
   lnkCol2tl: string;
   des: any;
   lbl: any;
-  ndParents: Array<any>;
+  ndParents: Array<INdParent>;
   ID: string;
   userName: string;
+}
+
+export interface IFi {
+  des: any;
+  lbl: any;
+  ID: string;
+}
+
+export interface INd {
+  des: any;
+  lbl: any;
+  ID: string;
+  FI: Array<IFi>;
+}
+
+export interface INdParent {
+  des: any;
+  lbl: any;
+  ID: string;
+  ND: Array<INd>;
 }
 
 @Injectable({
@@ -33,8 +54,24 @@ export class TresService {
   private frontendApi = `${apiUrl}/api/fronted`;
   constructor(private http: HttpClient) { }
 
+  addTre(lbl: string, des?: string) {
+    return this.http.post<ITre>(`${this.frontendApi}/tre/new/`, { lbl, des });
+  }
+
+  addNdParent(treId: string, lbl: string, des?: string) {
+    return this.http.post<INdParent>(`${this.frontendApi}/ndparent/new/${treId}/`, { lbl, des });
+  }
+
+  addNd(ndParentId: string, lbl: string, des?: string) {
+    return this.http.post<INd>(`${this.frontendApi}/nd/new/${ndParentId}/`, { lbl, des });
+  }
+
+  addFi(ndId: string, fiType: string, lbl: string, des?: string) {
+    return this.http.post<IFi>(`${this.frontendApi}/fi/new/${ndId}/${fiType}/`, { });
+  }
+
   getTres() {
-    return this.http.get<ITre[]>(`${this.frontendApi}/tre`);
+    return this.http.get<ITre[]>(`${this.frontendApi}/tre/`);
   }
 
   getTre(id: string) {
@@ -46,7 +83,7 @@ export class TresService {
   }
 
   getNd(id: string) {
-    return this.http.get<any>(`${this.frontendApi}/nd/${id}`);
+    return this.http.get<INd>(`${this.frontendApi}/nd/${id}`);
   }
 
   getFi(id: string) {

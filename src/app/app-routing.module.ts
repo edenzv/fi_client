@@ -37,7 +37,7 @@ const appRoutes: Routes = [
   { path: 'add', component: AddUserComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
   { path: '', component: UserPageComponent, data: { roles: ['user'] }, canActivate: [AuthGuard],
     children: [
-      { path: 'flows', component: FlowsComponent }
+      { path: 'flows/:id', component: FlowsComponent }
     ]},
   { path: 'login', component: LoginComponent },
 

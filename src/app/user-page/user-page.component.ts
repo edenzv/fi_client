@@ -1,7 +1,10 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticationService } from '../_services';
 import { ChecklistDatabaseService, TodoItemFlatNode, TodoItemNode } from '../checklist-database.service';
 
 @Component({
@@ -33,7 +36,9 @@ export class UserPageComponent {
   /** The selection for checklist */
   checklistSelection = new SelectionModel<TodoItemFlatNode>(true /* multiple */);
 
-  constructor(private database: ChecklistDatabaseService) {
+  constructor(private database: ChecklistDatabaseService,
+              private route: ActivatedRoute,
+              private router: Router) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
@@ -105,6 +110,11 @@ export class UserPageComponent {
   todoLeafItemSelectionToggle(node: TodoItemFlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
+
+    if (node.level === 3) {
+      const currentNode = this.flatNodeMap.get(node);
+      this.router.navigate(['flows', currentNode.id]);
+    }
   }
 
   /* Checks all the parents when a leaf node is selected/unselected */
@@ -153,13 +163,15 @@ export class UserPageComponent {
   /** Select the category so we can insert the new item. */
   addNewItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
-    this.database.insertItem(parentNode!, '');
+    this.database.insertItem(parentNode!, '', node.level < 3);
     this.treeControl.expand(node);
   }
 
   /** Save the node to database */
   saveNode(node: TodoItemFlatNode, itemValue: string) {
     const nestedNode = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode!, itemValue);
+    const flatParentNode = this.getParentNode(node);
+    const parentNode = this.flatNodeMap.get(flatParentNode);
+    this.database.updateItem(nestedNode!, itemValue, node.level, parentNode.id);
   }
 }

@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { TresService } from './tres.service';
+import { map } from 'rxjs/operators';
+import { INd, INdParent, ITre, TresService } from './tres.service';
 
 /**
  * Node for to-do item
  */
 export class TodoItemNode {
-  children: TodoItemNode[];
+  id?: string;
+  children?: TodoItemNode[];
   item: string;
 }
 
@@ -55,15 +57,36 @@ export class ChecklistDatabaseService {
     this.tresService.getTres()
       .subscribe(
         (result) => {
-          const treeData = result.map((tre) => {
-            return {
-              [tre.ID]: null
+          const treeData: { [key: string]: any } = {
+            Projects: {
+              children: {}
+            }
+          };
+          result.forEach((tre) => {
+            const mainParentChildren = treeData.Projects.children;
+            const treKey = `${tre.lbl}: ${tre.des}`;
+            mainParentChildren[treKey] = {
+              id: tre.ID,
+              children: {}
             };
+            tre.ndParents.forEach(ndParent => {
+              const ndParentKey = `${ndParent.lbl}: ${ndParent.des}`;
+              mainParentChildren[treKey].children[ndParentKey] = {
+                id: ndParent.ID,
+                children: {}
+              };
+              ndParent.ND.forEach(nd => {
+                const ndKey = `${nd.lbl}: ${nd.des}`;
+                mainParentChildren[treKey].children[ndParentKey].children[ndKey] = {
+                  id: nd.ID
+                };
+              });
+            });
           });
 
           // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
           //     file node as children.
-          const data = this.buildFileTree(TREE_DATA, 0);
+          const data = this.buildFileTree(treeData, 0);
 
           // Notify the change.
           this.dataChange.next(data);
@@ -77,17 +100,19 @@ export class ChecklistDatabaseService {
    * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
    * The return value is the list of `TodoItemNode`.
    */
-  buildFileTree(obj: {[key: string]: any}, level: number): TodoItemNode[] {
+  buildFileTree(obj: { [key: string]: any }, level: number): TodoItemNode[] {
     return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
       const value = obj[key];
+      const children = value.children;
       const node = new TodoItemNode();
       node.item = key;
+      node.id = value.id;
 
-      if (value != null) {
-        if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
+      if (children != null) {
+        if (typeof children === 'object') {
+          node.children = this.buildFileTree(children, level + 1);
         } else {
-          node.item = value;
+          node.item = children;
         }
       }
 
@@ -96,15 +121,47 @@ export class ChecklistDatabaseService {
   }
 
   /** Add an item to to-do list */
-  insertItem(parent: TodoItemNode, name: string) {
+  insertItem(parent: TodoItemNode, name: string, withChildren: boolean) {
     if (parent.children) {
-      parent.children.push({item: name} as TodoItemNode);
+      const newItem: TodoItemNode = { item: name };
+      if (withChildren) {
+        newItem.children = [];
+      }
+      parent.children.push(newItem);
       this.dataChange.next(this.data);
     }
   }
 
-  updateItem(node: TodoItemNode, name: string) {
+  updateItem(node: TodoItemNode, name: string, level: number, parentId?: string) {
     node.item = name;
-    this.dataChange.next(this.data);
+    if (level === 1) {
+      this.tresService.addTre(name).subscribe(
+        (tre: ITre) => {
+          node.id = tre.ID;
+          this.dataChange.next(this.data);
+        },
+        error => {
+          console.error(error);
+        });
+    } else if (level === 2) {
+      this.tresService.addNdParent(parentId, name).subscribe(
+        (ndParent: INdParent) => {
+          node.id = ndParent.ID;
+          this.dataChange.next(this.data);
+        },
+        error => {
+          console.error(error);
+        });
+    } else if (level === 3) {
+      this.tresService.addNd(parentId, name).subscribe(
+        (nd: INd) => {
+          node.id = nd.ID;
+          this.dataChange.next(this.data);
+        },
+        error => {
+          console.error(error);
+        });
+    }
+
   }
 }
