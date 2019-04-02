@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 0, 0, 0.5);
+  // background: rgba(255, 0, 0, 0.5);
 }
 
 .example-header {
@@ -33,4 +33,13 @@
   height:100%;
   overflow-y: auto;
   background: repeating-linear-gradient(-45deg, rgba(69, 90, 100, 0.1), rgba(69, 90, 100, 0.1) 5px, rgba(236, 239, 241, 0.8) 5px, rgba(236, 239, 241, 0.8) 10px);
+}
+
+.project-inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-projects-buttons{
+  display: flex;
 }

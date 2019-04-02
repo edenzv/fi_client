@@ -67,6 +67,8 @@ export class UserPageComponent {
     const flatNode = existingNode && existingNode.item === node.item
                      ? existingNode
                      : new TodoItemFlatNode();
+    flatNode.id = node.id;
+    flatNode.description = node.description;
     flatNode.item = node.item;
     flatNode.level = level;
     flatNode.expandable = !!node.children;
@@ -163,15 +165,21 @@ export class UserPageComponent {
   /** Select the category so we can insert the new item. */
   addNewItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
-    this.database.insertItem(parentNode!, '', node.level < 3);
+    this.database.insertItem(parentNode!, '', node.level < 2);
     this.treeControl.expand(node);
   }
 
+  cancelNewItem(node: TodoItemFlatNode) {
+    const flatParentNode = this.getParentNode(node);
+    const parentNode = this.flatNodeMap.get(flatParentNode);
+    this.database.removeItem(parentNode!, '');
+  }
+
   /** Save the node to database */
-  saveNode(node: TodoItemFlatNode, itemValue: string) {
+  saveNode(node: TodoItemFlatNode, projName: string, itemDescription: string) {
     const nestedNode = this.flatNodeMap.get(node);
     const flatParentNode = this.getParentNode(node);
     const parentNode = this.flatNodeMap.get(flatParentNode);
-    this.database.updateItem(nestedNode!, itemValue, node.level, parentNode.id);
+    this.database.updateItem(nestedNode!, projName, itemDescription, node.level, parentNode.id);
   }
 }

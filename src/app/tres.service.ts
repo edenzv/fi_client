@@ -59,11 +59,11 @@ export class TresService {
   }
 
   addNdParent(treId: string, lbl: string, des?: string) {
-    return this.http.post<INdParent>(`${this.frontendApi}/ndparent/new/${treId}/`, { lbl, des });
+    return this.http.post<ITre>(`${this.frontendApi}/ndparent/new/${treId}/`, { lbl, des });
   }
 
   addNd(ndParentId: string, lbl: string, des?: string) {
-    return this.http.post<INd>(`${this.frontendApi}/nd/new/${ndParentId}/`, { lbl, des });
+    return this.http.post<INdParent>(`${this.frontendApi}/nd/new/${ndParentId}/`, { lbl, des });
   }
 
   addFi(ndId: string, fiType: string, lbl: string, des?: string) {

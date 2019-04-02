@@ -24,4 +24,8 @@ export class UserService {
    create(user: IUser) {
       return this.http.post(this.authApi + '/register', user);
     }
+
+  delete(user: IUser) {
+    return this.http.delete( `${this.authApi}/delete/${user.userName}/`);
+  }
 }

@@ -1,27 +1,36 @@
-<mat-toolbar class="example-header">
+<mat-toolbar class="example-header" color="primary">
   <button type="button" mat-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
 
-  <p><a [routerLink]="['/login']">Logout</a></p>
+  <p><a mat-button [routerLink]="['/login']">Logout</a></p>
 </mat-toolbar>
 
-<mat-sidenav-container class="example-container">
+<mat-sidenav-container autosize="true" class="example-container">
   <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
         <button mat-icon-button disabled></button>
         <mat-checkbox class="checklist-leaf-node"
                       [checked]="checklistSelection.isSelected(node)"
+                      matTooltip="{{node.description}}"
                       (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
         <button mat-icon-button disabled></button>
-        <mat-form-field>
-          <input matInput #itemValue placeholder="New item...">
-        </mat-form-field>
-        <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+        <div class="project-inputs">
+          <mat-form-field>
+            <input matInput #projName placeholder="Project Name">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput #Desc placeholder="Description">
+          </mat-form-field>
+          <div class="add-projects-buttons">
+            <button mat-button (click)="saveNode(node, projName.value, Desc.value)">Save</button>
+            <button mat-button (click)="cancelNewItem(node)">Cancel</button>
+          </div>
+        </div>
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
@@ -33,6 +42,7 @@
         </button>
         <mat-checkbox [checked]="descendantsAllSelected(node)"
                       [indeterminate]="descendantsPartiallySelected(node)"
+                      matTooltip="{{node.description}}"
                       (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
         <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
       </mat-tree-node>

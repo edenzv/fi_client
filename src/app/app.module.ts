@@ -6,7 +6,7 @@ import {
   MatInputModule,
   MatSidenavModule,
   MatTableModule,
-  MatToolbarModule,
+  MatToolbarModule, MatTooltipModule,
   MatTreeModule
 } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
@@ -38,7 +38,9 @@ import { FlowsComponent } from './flows/flows.component';
     MatIconModule,
     MatToolbarModule,
     MatTreeModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule,
+
   ],
   declarations: [
     AppComponent,

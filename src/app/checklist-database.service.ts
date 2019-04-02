@@ -10,10 +10,13 @@ export class TodoItemNode {
   id?: string;
   children?: TodoItemNode[];
   item: string;
+  description?: string;
 }
 
 /** Flat to-do item node with expandable and level information */
 export class TodoItemFlatNode {
+  id?: string;
+  description?: string;
   item: string;
   level: number;
   expandable: boolean;
@@ -64,21 +67,24 @@ export class ChecklistDatabaseService {
           };
           result.forEach((tre) => {
             const mainParentChildren = treeData.Projects.children;
-            const treKey = `${tre.lbl}: ${tre.des}`;
+            const treKey = `${tre.lbl}`;
             mainParentChildren[treKey] = {
               id: tre.ID,
-              children: {}
+              children: {},
+              description: tre.des,
             };
             tre.ndParents.forEach(ndParent => {
-              const ndParentKey = `${ndParent.lbl}: ${ndParent.des}`;
+              const ndParentKey = `${ndParent.lbl}`;
               mainParentChildren[treKey].children[ndParentKey] = {
                 id: ndParent.ID,
+                description: ndParent.des,
                 children: {}
               };
               ndParent.ND.forEach(nd => {
-                const ndKey = `${nd.lbl}: ${nd.des}`;
+                const ndKey = `${nd.lbl}`;
                 mainParentChildren[treKey].children[ndParentKey].children[ndKey] = {
-                  id: nd.ID
+                  id: nd.ID,
+                  description: nd.des,
                 };
               });
             });
@@ -107,6 +113,7 @@ export class ChecklistDatabaseService {
       const node = new TodoItemNode();
       node.item = key;
       node.id = value.id;
+      node.description = value.description;
 
       if (children != null) {
         if (typeof children === 'object') {
@@ -132,30 +139,40 @@ export class ChecklistDatabaseService {
     }
   }
 
-  updateItem(node: TodoItemNode, name: string, level: number, parentId?: string) {
+  removeItem(parent: TodoItemNode, name: string) {
+    parent.children = parent.children.filter(p => p.item !== '');
+    this.dataChange.next(this.data);
+  }
+
+  updateItem(node: TodoItemNode, name: string, description: string, level: number, parentId?: string) {
     node.item = name;
     if (level === 1) {
-      this.tresService.addTre(name).subscribe(
+      this.tresService.addTre(name, description).subscribe(
         (tre: ITre) => {
           node.id = tre.ID;
+          node.description = tre.des;
           this.dataChange.next(this.data);
         },
         error => {
           console.error(error);
         });
     } else if (level === 2) {
-      this.tresService.addNdParent(parentId, name).subscribe(
-        (ndParent: INdParent) => {
+      this.tresService.addNdParent(parentId, name, description).subscribe(
+        (tre: ITre) => {
+          const ndParent = tre.ndParents.find(ndP => ndP.lbl === node.item);
           node.id = ndParent.ID;
+          node.description = ndParent.des;
           this.dataChange.next(this.data);
         },
         error => {
           console.error(error);
         });
     } else if (level === 3) {
-      this.tresService.addNd(parentId, name).subscribe(
-        (nd: INd) => {
+      this.tresService.addNd(parentId, name, description).subscribe(
+        (ndParent: INdParent) => {
+          const nd = ndParent.ND.find(p => p.lbl === node.item);
           node.id = nd.ID;
+          node.description = nd.des;
           this.dataChange.next(this.data);
         },
         error => {
