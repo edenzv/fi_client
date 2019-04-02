@@ -1,9 +1,9 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  MatButtonModule, MatCheckboxModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule,
   MatIconModule,
-  MatInputModule,
+  MatInputModule, MatProgressSpinnerModule,
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule, MatTooltipModule,
@@ -40,7 +40,8 @@ import { FlowsComponent } from './flows/flows.component';
     MatTreeModule,
     MatCheckboxModule,
     MatTooltipModule,
-
+    MatCardModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
     AppComponent,
