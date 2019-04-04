@@ -44,7 +44,7 @@ export class AddUserComponent implements OnInit {
       .subscribe(
         (data) => {
           // this.alertService.success('Registration successful', true);
-          this.router.navigate(['/users']);
+          this.router.navigate(['/admin']);
         },
         (error) => {
           console.error(error);

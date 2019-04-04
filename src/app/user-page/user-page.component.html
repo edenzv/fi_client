@@ -8,14 +8,14 @@
 
 <mat-sidenav-container autosize="true" class="example-container">
   <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
-    <button mat-raised-button disabled="true">Delete</button>
+    <button mat-raised-button disabled="{{!selectedNode}}" (click)="deleteNode()">Delete</button>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
         <button mat-icon-button disabled></button>
         <mat-checkbox class="checklist-leaf-node"
                       [checked]="checklistSelection.isSelected(node)"
                       matTooltip="{{node.description}}"
-                      (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+                      (change)="itemSelectionToggle(node)">{{node.item}}</mat-checkbox>
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
@@ -41,10 +41,11 @@
             {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
           </mat-icon>
         </button>
-        <mat-checkbox [checked]="descendantsAllSelected(node)"
-                      [indeterminate]="descendantsPartiallySelected(node)"
+        <mat-checkbox *ngIf="node.level !== 0"
+                      [checked]="checklistSelection.isSelected(node)"
                       matTooltip="{{node.description}}"
-                      (change)="todoItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+                      (change)="itemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+        <label *ngIf="node.level === 0">{{node.item}}</label>
         <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
       </mat-tree-node>
     </mat-tree>

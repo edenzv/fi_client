@@ -15,6 +15,8 @@ import { ChecklistDatabaseService, TodoItemFlatNode, TodoItemNode } from '../che
 })
 export class UserPageComponent {
 
+  selectedNode: TodoItemFlatNode;
+
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap = new Map<TodoItemFlatNode, TodoItemNode>();
 
@@ -77,41 +79,17 @@ export class UserPageComponent {
     return flatNode;
   }
 
-  /** Whether all the descendants of the node are selected. */
-  descendantsAllSelected(node: TodoItemFlatNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.checklistSelection.isSelected(child)
-    );
-    return descAllSelected;
-  }
-
-  /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some(child => this.checklistSelection.isSelected(child));
-    return result && !this.descendantsAllSelected(node);
-  }
-
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  todoItemSelectionToggle(node: TodoItemFlatNode): void {
+  itemSelectionToggle(node: TodoItemFlatNode): void {
+    if (this.selectedNode) {
+      if (this.selectedNode.item !== node.item) {
+        this.checklistSelection.toggle(this.selectedNode);
+      }
+      this.selectedNode = undefined;
+    }
     this.checklistSelection.toggle(node);
-    const descendants = this.treeControl.getDescendants(node);
-    this.checklistSelection.isSelected(node)
-    ? this.checklistSelection.select(...descendants)
-    : this.checklistSelection.deselect(...descendants);
-
-    // Force update for the parent
-    descendants.every(child =>
-      this.checklistSelection.isSelected(child)
-    );
-    this.checkAllParentsSelection(node);
-  }
-
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  todoLeafItemSelectionToggle(node: TodoItemFlatNode): void {
-    this.checklistSelection.toggle(node);
-    this.checkAllParentsSelection(node);
+    if (this.checklistSelection.isSelected(node)) {
+      this.selectedNode = node;
+    }
 
     if (node.level === 3) {
       const currentNode = this.flatNodeMap.get(node);
@@ -162,6 +140,14 @@ export class UserPageComponent {
     return null;
   }
 
+  deleteNode() {
+    const node = this.selectedNode;
+    const flatNode = this.flatNodeMap.get(node);
+    const flatParentNode = this.getParentNode(node);
+    const parentNode = this.flatNodeMap.get(flatParentNode);
+    this.database.deleteItem(parentNode!, node.item, flatNode, node.level);
+  }
+
   /** Select the category so we can insert the new item. */
   addNewItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
@@ -172,7 +158,7 @@ export class UserPageComponent {
   cancelNewItem(node: TodoItemFlatNode) {
     const flatParentNode = this.getParentNode(node);
     const parentNode = this.flatNodeMap.get(flatParentNode);
-    this.database.removeItem(parentNode!, '');
+    this.database.deleteItem(parentNode!, '');
   }
 
   /** Save the node to database */

@@ -89,4 +89,20 @@ export class TresService {
   getFi(id: string) {
     return this.http.get<any>(`${this.frontendApi}/fi/${id}`);
   }
+
+  deleteTre(id: string) {
+    return this.http.delete<Array<ITre>>(`${this.frontendApi}/tre/${id}`);
+  }
+
+  deleteNdParent(id: string) {
+    return this.http.delete<ITre>(`${this.frontendApi}/ndparent/${id}`);
+  }
+
+  deleteNd(id: string) {
+    return this.http.delete<INdParent>(`${this.frontendApi}/nd/${id}`);
+  }
+
+  deleteFi(id: string) {
+    return this.http.delete<INd>(`${this.frontendApi}/fi/${id}`);
+  }
 }

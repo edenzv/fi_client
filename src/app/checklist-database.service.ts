@@ -139,9 +139,45 @@ export class ChecklistDatabaseService {
     }
   }
 
-  removeItem(parent: TodoItemNode, name: string) {
-    parent.children = parent.children.filter(p => p.item !== '');
-    this.dataChange.next(this.data);
+  deleteItem(parent: TodoItemNode, name: string, node?: TodoItemFlatNode, level?: number) {
+    if (name !== '' && node !== undefined && level !== undefined && node.id !== undefined) {
+      if (level === 1) {
+        this.tresService.deleteTre(node.id).subscribe(
+          (tres: Array<ITre>) => {
+            this.deleteItemFromList(parent, node);
+          },
+          error => {
+            console.error(error);
+          });
+      } else if (level === 2) {
+        this.tresService.deleteNdParent(node.id).subscribe(
+          (tre: ITre) => {
+            this.deleteItemFromList(parent, node);
+          },
+          error => {
+            console.error(error);
+          });
+      } else if (level === 3) {
+        this.tresService.deleteNd(node.id).subscribe(
+          (ndParent: INdParent) => {
+            this.deleteItemFromList(parent, node);
+          },
+          error => {
+            console.error(error);
+          });
+      }
+    } else {
+      parent.children = parent.children.filter(p => p.item !== name);
+      this.dataChange.next(this.data);
+    }
+  }
+
+  deleteItemFromList(parentNode: any, node: TodoItemFlatNode) {
+    const index = parentNode.children.indexOf(node);
+    if (index !== -1) {
+      parentNode.children.splice(index, 1);
+      this.dataChange.next(this.data);
+    }
   }
 
   updateItem(node: TodoItemNode, name: string, description: string, level: number, parentId?: string) {
