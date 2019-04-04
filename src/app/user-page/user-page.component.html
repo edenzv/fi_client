@@ -8,6 +8,7 @@
 
 <mat-sidenav-container autosize="true" class="example-container">
   <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
+    <button mat-raised-button disabled="true">Delete</button>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
         <button mat-icon-button disabled></button>
