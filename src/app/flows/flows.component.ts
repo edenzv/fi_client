@@ -36,6 +36,9 @@ export class FlowsComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
+      this.file.nativeElement.value = '';
+      this.fileType = undefined;
+      this.canUpload = false;
       this.ndId = this.route.snapshot.paramMap.get('id');
       this.getFiList();
     });
@@ -68,10 +71,12 @@ export class FlowsComponent implements OnInit {
         (data: { message: string; }) => {
           this.getFiList();
           this.uploading = false;
+          this.file.nativeElement.value = '';
         },
         error => {
           this.uploading = false;
           console.error(error);
+          this.file.nativeElement.value = '';
         });
     }
   }

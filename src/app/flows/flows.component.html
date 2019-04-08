@@ -2,7 +2,7 @@
   <div class="upload-file">
     <mat-form-field>
       <mat-label>File type to upload</mat-label>
-      <mat-select #fileType (selectionChange)="fileTypeSelected($event)">
+      <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
         <mat-option *ngFor="let type of fileTypes" [value]="type.value">
           {{type.viewValue}}
         </mat-option>
