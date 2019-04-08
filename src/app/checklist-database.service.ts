@@ -139,7 +139,7 @@ export class ChecklistDatabaseService {
     }
   }
 
-  deleteItem(parent: TodoItemNode, name: string, node?: TodoItemFlatNode, level?: number) {
+  deleteItem(parent: TodoItemNode, name: string, node?: TodoItemNode, level?: number) {
     if (name !== '' && node !== undefined && level !== undefined && node.id !== undefined) {
       if (level === 1) {
         this.tresService.deleteTre(node.id).subscribe(
@@ -172,7 +172,7 @@ export class ChecklistDatabaseService {
     }
   }
 
-  deleteItemFromList(parentNode: any, node: TodoItemFlatNode) {
+  deleteItemFromList(parentNode: any, node: TodoItemNode) {
     const index = parentNode.children.indexOf(node);
     if (index !== -1) {
       parentNode.children.splice(index, 1);
