@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser } from '../_services';
-import { INdParent, TresService } from '../tres.service';
+import { IFi, INd, INdParent, TresService } from '../tres.service';
 
 export interface IFiModel {
   number: number;
@@ -45,15 +45,20 @@ export class FlowsComponent implements OnInit {
     if (this.ndId) {
       this.tresService.getNd(this.ndId).subscribe(
         (result) => {
-          this.dataSource = result.FI.map((fi, index) => {
-            return {
-              number: index + 1,
-              label: fi.lbl,
-              status: 'Success'
-            };
-          });
+          this.initDataSource(result);
         });
     }
+  }
+
+  private initDataSource(result) {
+    this.dataSource = result.FI.map((fi, index) => {
+      return {
+        number: index + 1,
+        label: fi.lbl,
+        status: 'Success',
+        ID: fi.ID
+      };
+    });
   }
 
   upload() {
@@ -78,5 +83,15 @@ export class FlowsComponent implements OnInit {
 
   addFile() {
     this.file.nativeElement.click();
+  }
+
+  delete(fi: any) {
+    this.tresService.deleteFi(fi.ID).subscribe(
+      (data: INd) => {
+        this.initDataSource(data);
+      },
+      error => {
+        console.error(error);
+      });
   }
 }
