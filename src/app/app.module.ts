@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule,
   MatIconModule,
-  MatInputModule, MatProgressSpinnerModule,
+  MatInputModule, MatProgressSpinnerModule, MatSelectModule,
   MatSidenavModule,
   MatTableModule,
   MatToolbarModule, MatTooltipModule,
@@ -41,7 +41,8 @@ import { FlowsComponent } from './flows/flows.component';
     MatCheckboxModule,
     MatTooltipModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule
   ],
   declarations: [
     AppComponent,

@@ -66,8 +66,10 @@ export class TresService {
     return this.http.post<INdParent>(`${this.frontendApi}/nd/new/${ndParentId}/`, { lbl, des });
   }
 
-  addFi(ndId: string, fiType: string, lbl: string, des?: string) {
-    return this.http.post<IFi>(`${this.frontendApi}/fi/new/${ndId}/${fiType}/`, { });
+  addFi(ndId: string, fiType: string, file: any) {
+    const body = new FormData();
+    body.append('fiDoc', file, file.name);
+    return this.http.post<{ message: string; }>(`${this.frontendApi}/fi/new/${ndId}/${fiType}/`, body);
   }
 
   getTres() {

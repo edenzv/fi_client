@@ -6,6 +6,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../_services';
 import { ChecklistDatabaseService, TodoItemFlatNode, TodoItemNode } from '../checklist-database.service';
+import { ITre } from '../tres.service';
 
 @Component({
   selector: 'app-user-page',
@@ -145,7 +146,14 @@ export class UserPageComponent {
     const flatNode = this.flatNodeMap.get(node);
     const flatParentNode = this.getParentNode(node);
     const parentNode = this.flatNodeMap.get(flatParentNode);
-    this.database.deleteItem(parentNode!, node.item, flatNode, node.level);
+    this.database.deleteItem(parentNode!, node.item, flatNode, node.level).subscribe(
+      (tres: Array<any>) => {
+        this.database.deleteItemFromList(parentNode!, flatNode);
+        this.router.navigate(['']);
+      },
+      error => {
+        console.error(error);
+      });
   }
 
   /** Select the category so we can insert the new item. */

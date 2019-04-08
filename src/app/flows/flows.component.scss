@@ -1,4 +1,18 @@
-.flow-table {
+.flows {
   width: 70%;
   margin: auto;
+}
+
+.add-files-btn {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.flow-table {
+  width: 100%;
+}
+
+.upload-file {
+  display: flex;
+  align-items: center;
 }

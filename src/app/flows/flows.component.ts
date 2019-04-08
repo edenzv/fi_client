@@ -1,26 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TresService } from '../tres.service';
+import { IUser } from '../_services';
+import { INdParent, TresService } from '../tres.service';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+export interface IFiModel {
+  number: number;
+  label: string;
+  status: string;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
 
 @Component({
   selector: 'app-flows',
@@ -28,24 +16,67 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./flows.component.scss']
 })
 export class FlowsComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
+  @ViewChild('file') file;
+  displayedColumns: string[] = ['number', 'label', 'status', 'download', 'export', 'delete'];
+  dataSource = [];
+  fileTypes: any[] = [
+    { value: 'yes_no', viewValue: 'yes_no' },
+    { value: 'flowchart', viewValue: 'flowchart' },
+    { value: 'table', viewValue: 'table' }
+  ];
+  canUpload = false;
+  uploading = false;
+  ndId: string;
+  fileType: string;
+  public files: Set<File> = new Set();
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private tresService: TresService) { }
 
   ngOnInit() {
-    const a = '1';
     this.route.params.subscribe(params => {
-
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        this.tresService.getNd(id).subscribe(
-          (result) => {
-          });
-      }
+      this.ndId = this.route.snapshot.paramMap.get('id');
+      this.getFiList();
     });
   }
 
+  private getFiList() {
+    if (this.ndId) {
+      this.tresService.getNd(this.ndId).subscribe(
+        (result) => {
+          this.dataSource = result.FI.map((fi, index) => {
+            return {
+              number: index + 1,
+              label: fi.lbl,
+              status: 'Success'
+            };
+          });
+        });
+    }
+  }
+
+  upload() {
+    if (this.file && this.file.nativeElement && this.file.nativeElement.files[0]) {
+      this.uploading = true;
+      this.tresService.addFi(this.ndId, this.fileType, this.file.nativeElement.files[0]).subscribe(
+        (data: { message: string; }) => {
+          this.getFiList();
+          this.uploading = false;
+        },
+        error => {
+          this.uploading = false;
+          console.error(error);
+        });
+    }
+  }
+
+  fileTypeSelected($event: any) {
+    this.canUpload = true;
+    this.fileType = $event.value;
+  }
+
+  addFile() {
+    this.file.nativeElement.click();
+  }
 }

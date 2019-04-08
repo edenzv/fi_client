@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { INd, INdParent, ITre, TresService } from './tres.service';
 
@@ -139,32 +139,14 @@ export class ChecklistDatabaseService {
     }
   }
 
-  deleteItem(parent: TodoItemNode, name: string, node?: TodoItemNode, level?: number) {
+  deleteItem(parent: TodoItemNode, name: string, node?: TodoItemNode, level?: number): Observable<any> {
     if (name !== '' && node !== undefined && level !== undefined && node.id !== undefined) {
       if (level === 1) {
-        this.tresService.deleteTre(node.id).subscribe(
-          (tres: Array<ITre>) => {
-            this.deleteItemFromList(parent, node);
-          },
-          error => {
-            console.error(error);
-          });
+        return this.tresService.deleteTre(node.id);
       } else if (level === 2) {
-        this.tresService.deleteNdParent(node.id).subscribe(
-          (tre: ITre) => {
-            this.deleteItemFromList(parent, node);
-          },
-          error => {
-            console.error(error);
-          });
+        return this.tresService.deleteNdParent(node.id);
       } else if (level === 3) {
-        this.tresService.deleteNd(node.id).subscribe(
-          (ndParent: INdParent) => {
-            this.deleteItemFromList(parent, node);
-          },
-          error => {
-            console.error(error);
-          });
+        return this.tresService.deleteNd(node.id);
       }
     } else {
       parent.children = parent.children.filter(p => p.item !== name);
