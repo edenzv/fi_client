@@ -31,6 +31,7 @@ export interface IFi {
   des: any;
   lbl: any;
   ID: string;
+  PG: any;
 }
 
 export interface INd {

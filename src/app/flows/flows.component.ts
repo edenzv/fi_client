@@ -1,5 +1,8 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IUser } from '../_services';
 import { IFi, INd, INdParent, TresService } from '../tres.service';
@@ -13,12 +16,20 @@ export interface IFiModel {
 @Component({
   selector: 'app-flows',
   templateUrl: './flows.component.html',
-  styleUrls: ['./flows.component.scss']
+  styleUrls: ['./flows.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 export class FlowsComponent implements OnInit {
   @ViewChild('file') file;
-  displayedColumns: string[] = ['number', 'label', 'status', 'download', 'export', 'delete'];
-  dataSource = [];
+  displayedColumns: string[] = ['select', 'number', 'label', 'status', 'download', 'export', 'delete'];
+  selection = new SelectionModel<any>(true, []);
+  dataSource: any;
   fileTypes: any[] = [
     { value: 'yes_no', viewValue: 'yes_no' },
     { value: 'flowchart', viewValue: 'flowchart' },
@@ -29,6 +40,7 @@ export class FlowsComponent implements OnInit {
   ndId: string;
   fileType: string;
   public files: Set<File> = new Set();
+  expandedElement: any;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -44,6 +56,29 @@ export class FlowsComponent implements OnInit {
     });
   }
 
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    if (!this.dataSource) return false;
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+    this.selection.clear() :
+    this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+  }
+
   private getFiList() {
     if (this.ndId) {
       this.tresService.getNd(this.ndId).subscribe(
@@ -54,14 +89,17 @@ export class FlowsComponent implements OnInit {
   }
 
   private initDataSource(result) {
-    this.dataSource = result.FI.map((fi, index) => {
+    const mapedResult = result.FI.map((fi, index) => {
       return {
         number: index + 1,
         label: fi.lbl,
         status: 'Success',
-        ID: fi.ID
+        ID: fi.ID,
+        PG: fi.PG
       };
     });
+
+    this.dataSource = new MatTableDataSource<any>(mapedResult);
   }
 
   upload() {
@@ -98,5 +136,9 @@ export class FlowsComponent implements OnInit {
       error => {
         console.error(error);
       });
+  }
+
+  exportSelected() {
+
   }
 }

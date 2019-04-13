@@ -1,32 +1,52 @@
 <div class="flows">
-  <div class="upload-file">
-    <mat-form-field>
-      <mat-label>File type to upload</mat-label>
-      <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
-        <mat-option *ngFor="let type of fileTypes" [value]="type.value">
-          {{type.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <input
-      type="file"
-      #file
-      style="display: none"
-      (change)="upload()"
-      accept=".docx"
-      required
-    />
-    <button [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
-      Add File
-    </button>
+  <div class="buttons-bar">
+    <div class="upload-file">
+      <mat-form-field>
+        <mat-label>File type to upload</mat-label>
+        <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
+          <mat-option *ngFor="let type of fileTypes" [value]="type.value">
+            {{type.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <input
+        type="file"
+        #file
+        style="display: none"
+        (change)="upload()"
+        accept=".docx"
+        required
+      />
+      <button [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
+        Add File
+      </button>
 
-    <mat-spinner *ngIf="uploading" diameter="25"></mat-spinner>
+      <mat-spinner *ngIf="uploading" diameter="25"></mat-spinner>
+    </div>
+    <button [disabled]="!selection.hasValue()" mat-raised-button class="export-selected-btn" (click)="exportSelected()">
+      Export
+    </button>
   </div>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 flow-table">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8 flow-table">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="number">
       <th mat-header-cell *matHeaderCellDef> No.</th>
       <td mat-cell *matCellDef="let element"> {{element.number}} </td>
@@ -63,8 +83,32 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div class="example-element-detail"
+             [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          <div>Heelooooo</div>
+<!--          <div class="example-element-diagram">-->
+<!--            <div class="example-element-position"> {{element.position}} </div>-->
+<!--            <div class="example-element-symbol"> {{element.symbol}} </div>-->
+<!--            <div class="example-element-name"> {{element.name}} </div>-->
+<!--            <div class="example-element-weight"> {{element.weight}} </div>-->
+<!--          </div>-->
+<!--          <div class="example-element-description">-->
+<!--            {{element.description}}-->
+<!--            <span class="example-element-description-attribution"> &#45;&#45; Wikipedia </span>-->
+<!--          </div>-->
+        </div>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
 
 </div>
