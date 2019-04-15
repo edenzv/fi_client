@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { IUser, UserService } from '../_services';
 
 
@@ -8,10 +9,11 @@ import { IUser, UserService } from '../_services';
     styleUrls: ['./admin-page.component.scss']
   })
 export class AdminPageComponent implements OnInit {
-  displayedColumns: string[] = ['userName', 'password', 'firstName', 'lastName', 'role', 'delete'];
+  displayedColumns: string[] = ['userName', 'password', 'firstName', 'lastName', 'role', 'edit', 'delete'];
   users: Array<IUser>;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+              private router: Router) {}
 
   ngOnInit() {
     this.initUsersTable();
@@ -24,6 +26,13 @@ export class AdminPageComponent implements OnInit {
       (error) => {
         console.error(error);
       });
+  }
+
+  edit(user: IUser) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: user
+    };
+    this.router.navigate(['add'], navigationExtras);
   }
 
   deleteUser(user: IUser) {

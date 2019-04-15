@@ -19,15 +19,15 @@ export interface IFiModel {
   styleUrls: ['./flows.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ]
 })
 export class FlowsComponent implements OnInit {
   @ViewChild('file') file;
-  displayedColumns: string[] = ['select', 'number', 'label', 'status', 'download', 'export', 'delete'];
+  displayedColumns: string[] = ['select', 'number', 'label', 'status', 'download', 'delete'];
   selection = new SelectionModel<any>(true, []);
   dataSource: any;
   fileTypes: any[] = [
@@ -136,6 +136,22 @@ export class FlowsComponent implements OnInit {
       error => {
         console.error(error);
       });
+  }
+
+  download(fi: any) {
+    this.tresService.downloadFi(fi.ID).subscribe(
+      (data: any) => {
+        this.downloadFile(data);
+      },
+      error => {
+        console.error(error);
+      });
+  }
+
+  downloadFile(data: any) {
+    const blob = new Blob([data], { type: 'xml' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
   exportSelected() {

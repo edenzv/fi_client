@@ -176,8 +176,7 @@ export class ChecklistDatabaseService {
         });
     } else if (level === 2) {
       this.tresService.addNdParent(parentId, name, description).subscribe(
-        (tre: ITre) => {
-          const ndParent = tre.ndParents.find(ndP => ndP.lbl === node.item);
+        (ndParent: INdParent) => {
           node.id = ndParent.ID;
           node.description = ndParent.des;
           this.dataChange.next(this.data);
@@ -187,8 +186,7 @@ export class ChecklistDatabaseService {
         });
     } else if (level === 3) {
       this.tresService.addNd(parentId, name, description).subscribe(
-        (ndParent: INdParent) => {
-          const nd = ndParent.ND.find(p => p.lbl === node.item);
+        (nd: INd) => {
           node.id = nd.ID;
           node.description = nd.des;
           this.dataChange.next(this.data);

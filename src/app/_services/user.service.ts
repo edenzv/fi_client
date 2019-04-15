@@ -14,18 +14,23 @@ export interface IUser {
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private authApi = `${apiUrl}/api/user`;
-    constructor(private http: HttpClient) { }
+  private authApi = `${apiUrl}/api/user`;
 
-   getAllUsers() {
-        return this.http.get<IUser[]>(`${this.authApi}/getAll`);
-    }
+  constructor(private http: HttpClient) { }
 
-   create(user: IUser) {
-      return this.http.post(this.authApi + '/register', user);
-    }
+  getAllUsers() {
+    return this.http.get<IUser[]>(`${this.authApi}/getAll`);
+  }
+
+  create(user: IUser) {
+    return this.http.post(this.authApi + '/register', user);
+  }
+
+  update(user: IUser) {
+    return this.http.post(this.authApi + '/update', user);
+  }
 
   delete(user: IUser) {
-    return this.http.delete( `${this.authApi}/delete/${user.userName}/`);
+    return this.http.delete(`${this.authApi}/delete/${user.userName}/`);
   }
 }
