@@ -53,6 +53,7 @@ export interface INdParent {
 })
 export class TresService {
   private frontendApi = `${apiUrl}/api/fronted`;
+
   constructor(private http: HttpClient) { }
 
   addTre(lbl: string, des?: string) {
@@ -111,5 +112,10 @@ export class TresService {
 
   downloadFi(id: string) {
     return this.http.get<any>(`${this.frontendApi}/fi/${id}/fiDoc/`);
+  }
+
+  export(data: any) {
+    // return this.http.post<any>(`${this.frontendApi}/export`, data, { responseType: 'arraybuffer' });
+    return this.http.post<any>(`${this.frontendApi}/export`, data);
   }
 }

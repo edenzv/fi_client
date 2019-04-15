@@ -80,17 +80,44 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <div>Heelooooo</div>
-<!--          <div class="example-element-diagram">-->
-<!--            <div class="example-element-position"> {{element.position}} </div>-->
-<!--            <div class="example-element-symbol"> {{element.symbol}} </div>-->
-<!--            <div class="example-element-name"> {{element.name}} </div>-->
-<!--            <div class="example-element-weight"> {{element.weight}} </div>-->
-<!--          </div>-->
-<!--          <div class="example-element-description">-->
-<!--            {{element.description}}-->
-<!--            <span class="example-element-description-attribution"> &#45;&#45; Wikipedia </span>-->
-<!--          </div>-->
+          <table class="inside-table">
+            <thead>
+            <tr>
+              <th>n</th>
+              <th>htmlObj</th>
+              <th>N</th>
+              <th>Y</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let pg of element.PG">
+              <td>{{pg.n}}</td>
+              <td>
+                htmlData
+                <table>
+                  <thead>
+                  <tr>
+                    <th>htmlType</th>
+                    <th>txt</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let htmlData of pg.htmlObj.htmlData">
+                    <td>{{htmlData.htmlType}}</td>
+                    <td>{{htmlData.txt}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </td>
+              <td>
+                  <div *ngFor="let key of objectKeys(pg.N)">{{key + ' : ' + pg.N[key]}}</div>
+              </td>
+              <td>
+                <div *ngFor="let key of objectKeys(pg.Y)">{{key + ' : ' + pg.Y[key]}}</div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </td>
     </ng-container>

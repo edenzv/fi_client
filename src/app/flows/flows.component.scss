@@ -67,3 +67,15 @@ tr.example-element-row:not(.example-expanded-row):active {
 .example-element-description-attribution {
   opacity: 0.5;
 }
+
+
+.inside-table{
+  border-collapse:collapse;
+  caption-side:bottom;
+  border: solid 1px #000;
+  padding: 10px;
+  th, td {
+    border: solid 1px #000;
+    padding: 10px;
+  }
+}

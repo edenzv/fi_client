@@ -38,20 +38,25 @@ export class FlowsComponent implements OnInit {
   canUpload = false;
   uploading = false;
   ndId: string;
+  ndParentId: string;
+  treId: string;
   fileType: string;
   public files: Set<File> = new Set();
   expandedElement: any;
+  objectKeys = Object.keys;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private tresService: TresService) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
       this.file.nativeElement.value = '';
       this.fileType = undefined;
       this.canUpload = false;
-      this.ndId = this.route.snapshot.paramMap.get('id');
+      this.ndId = params.ndId;
+      this.ndParentId = params.ndParentId;
+      this.treId = params.treId;
       this.getFiList();
     });
   }
@@ -141,20 +146,46 @@ export class FlowsComponent implements OnInit {
   download(fi: any) {
     this.tresService.downloadFi(fi.ID).subscribe(
       (data: any) => {
-        this.downloadFile(data);
+        this.downloadFile(data, 'xml');
       },
       error => {
         console.error(error);
       });
   }
 
-  downloadFile(data: any) {
-    const blob = new Blob([data], { type: 'xml' });
-    const url = window.URL.createObjectURL(blob);
-    window.open(url);
+  exportSelected() {
+    const selectedFIIds = this.selection.selected.map(row => {
+      return { ID: row.ID};
+    });
+    const data = {
+      ID: this.treId,
+      ndParents: [
+        {
+          ID: this.ndParentId,
+          ND: [
+            {
+              ID: this.ndId,
+              FI: selectedFIIds
+            }
+          ]
+        }
+      ]
+    };
+    this.tresService.export(data).subscribe(
+      (result: any) => {
+        this.downloadFile(result, 'zip');
+      },
+      error => {
+        console.error(error);
+      });
   }
 
-  exportSelected() {
-
+  downloadFile(data: any, type: string) {
+    const blob = new Blob([data], { type: type.toString() });
+    const url = window.URL.createObjectURL(blob);
+    const pwa = window.open(url);
+    if (!pwa || pwa.closed || pwa.closed === undefined) {
+      alert('Please disable your Pop-up blocker and try again.');
+    }
   }
 }

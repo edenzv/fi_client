@@ -3,7 +3,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AuthenticationService } from '../_services';
 import { ChecklistDatabaseService, TodoItemFlatNode, TodoItemNode } from '../checklist-database.service';
 import { ITre } from '../tres.service';
@@ -94,7 +94,16 @@ export class UserPageComponent {
 
     if (node.level === 3) {
       const currentNode = this.flatNodeMap.get(node);
-      this.router.navigate(['flows', currentNode.id]);
+      const ndParent = this.getParentNode(node);
+      const tre = this.getParentNode(ndParent);
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          ndId: currentNode.id,
+          ndParentId: ndParent.id,
+          treId: tre.id
+        }
+      };
+      this.router.navigate(['flows'], navigationExtras);
     }
   }
 
