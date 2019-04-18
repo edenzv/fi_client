@@ -35,6 +35,7 @@ export class FlowsComponent implements OnInit {
     { value: 'flowchart', viewValue: 'flowchart' },
     { value: 'table', viewValue: 'table' }
   ];
+  chooseUpload = false;
   canUpload = false;
   uploading = false;
   ndId: string;
@@ -76,6 +77,11 @@ export class FlowsComponent implements OnInit {
     this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
+  /** Selects upload new doc/docx file. */
+  selectedUploadFile() {
+    this.chooseUpload = true;
+  }
+
   /** The label for the checkbox on the passed row */
   checkboxLabel(row?: any): string {
     if (!row) {
@@ -114,10 +120,12 @@ export class FlowsComponent implements OnInit {
         (data: { message: string; }) => {
           this.getFiList();
           this.uploading = false;
+          this.chooseUpload = false;
           this.file.nativeElement.value = '';
         },
         error => {
           this.uploading = false;
+          this.chooseUpload = false;
           console.error(error);
           this.file.nativeElement.value = '';
         });
@@ -187,5 +195,9 @@ export class FlowsComponent implements OnInit {
     if (!pwa || pwa.closed || pwa.closed === undefined) {
       alert('Please disable your Pop-up blocker and try again.');
     }
+  }
+
+  DeleteSelected() {
+
   }
 }

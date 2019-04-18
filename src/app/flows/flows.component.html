@@ -1,7 +1,11 @@
 <div class="flows">
+  <br>
   <div class="buttons-bar">
     <div class="upload-file">
-      <mat-form-field>
+      <button mat-raised-button color="primary" class="add-files-btn" (click)="selectedUploadFile()">
+        New FI
+      </button>
+      <mat-form-field *ngIf="chooseUpload">
         <mat-label>File type to upload</mat-label>
         <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
           <mat-option *ngFor="let type of fileTypes" [value]="type.value">
@@ -17,17 +21,19 @@
         accept=".docx"
         required
       />
-      <button [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
+      <button *ngIf="chooseUpload" [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
         Add File
       </button>
-
       <mat-spinner *ngIf="uploading" diameter="25"></mat-spinner>
     </div>
+    <button [disabled]="!selection.hasValue()" mat-raised-button class="export-selected-btn" (click)="DeleteSelected()">
+      Delete
+    </button>
     <button [disabled]="!selection.hasValue()" mat-raised-button class="export-selected-btn" (click)="exportSelected()">
       Export
     </button>
   </div>
-
+  <br>
   <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8 flow-table">
 
     <ng-container matColumnDef="select">
