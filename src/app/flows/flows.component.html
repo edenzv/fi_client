@@ -26,12 +26,14 @@
       </button>
       <mat-spinner *ngIf="uploading" diameter="25"></mat-spinner>
     </div>
-    <button [disabled]="!selection.hasValue()" mat-raised-button class="export-selected-btn" (click)="DeleteSelected()">
+    <div class="export-selected-btn">
+    <button [disabled]="!selection.hasValue()" mat-raised-button (click)="DeleteSelected()">
       Delete
     </button>
-    <button [disabled]="!selection.hasValue()" mat-raised-button class="export-selected-btn" (click)="exportSelected()">
+    <button [disabled]="!selection.hasValue()" mat-raised-button (click)="exportSelected()">
       Export
     </button>
+    </div>
   </div>
   <br>
   <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8 flow-table">
@@ -78,7 +80,6 @@
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <button mat-raised-button (click)="delete(element)">Delete</button>
       </td>
     </ng-container>
 

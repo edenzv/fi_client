@@ -198,6 +198,17 @@ export class FlowsComponent implements OnInit {
   }
 
   DeleteSelected() {
-
+    const selectedFIIds = this.selection.selected.map(row => {
+      return { ID: row.ID};
+    });
+    for (let fi of selectedFIIds) {
+      this.tresService.deleteFi(fi.ID).subscribe(
+        (data: INd) => {
+          this.initDataSource(data);
+        },
+        error => {
+          console.error(error);
+        });
+    }
   }
 }
