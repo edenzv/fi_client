@@ -21,18 +21,19 @@
         accept=".docx"
         required
       />
-      <button *ngIf="chooseUpload" [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn" (click)="addFile()">
+      <button *ngIf="chooseUpload" [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn"
+              (click)="addFile()">
         Add File
       </button>
       <mat-spinner *ngIf="uploading" diameter="25"></mat-spinner>
     </div>
     <div class="export-selected-btn">
-    <button [disabled]="!selection.hasValue()" mat-raised-button (click)="DeleteSelected()">
-      Delete
-    </button>
-    <button [disabled]="!selection.hasValue()" mat-raised-button (click)="exportSelected()">
-      Export
-    </button>
+      <button class="delete-selected-btn" [disabled]="!selection.hasValue()" mat-raised-button (click)="DeleteSelected()">
+        Delete
+      </button>
+      <button [disabled]="!selection.hasValue()" mat-raised-button (click)="exportSelected()">
+        Export
+      </button>
     </div>
   </div>
   <br>
@@ -117,7 +118,7 @@
                 </table>
               </td>
               <td>
-                  <div *ngFor="let key of objectKeys(pg.N)">{{key + ' : ' + pg.N[key]}}</div>
+                <div *ngFor="let key of objectKeys(pg.N)">{{key + ' : ' + pg.N[key]}}</div>
               </td>
               <td>
                 <div *ngFor="let key of objectKeys(pg.Y)">{{key + ' : ' + pg.Y[key]}}</div>
