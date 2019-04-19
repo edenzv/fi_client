@@ -88,44 +88,7 @@
       <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
         <div class="example-element-detail"
              [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-          <table class="inside-table">
-            <thead>
-            <tr>
-              <th>n</th>
-              <th>htmlObj</th>
-              <th>N</th>
-              <th>Y</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let pg of element.PG">
-              <td>{{pg.n}}</td>
-              <td>
-                htmlData
-                <table>
-                  <thead>
-                  <tr>
-                    <th>htmlType</th>
-                    <th>txt</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr *ngFor="let htmlData of pg.htmlObj.htmlData">
-                    <td>{{htmlData.htmlType}}</td>
-                    <td>{{htmlData.txt}}</td>
-                  </tr>
-                  </tbody>
-                </table>
-              </td>
-              <td>
-                <div *ngFor="let key of objectKeys(pg.N)">{{key + ' : ' + pg.N[key]}}</div>
-              </td>
-              <td>
-                <div *ngFor="let key of objectKeys(pg.Y)">{{key + ' : ' + pg.Y[key]}}</div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+          <app-re-table [tableData]="element.PG"></app-re-table>
         </div>
       </td>
     </ng-container>

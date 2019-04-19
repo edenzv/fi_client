@@ -1,0 +1,10 @@
+.inside-table{
+  border-collapse:collapse;
+  caption-side:bottom;
+  border: solid 1px #000;
+  padding: 10px;
+  th, td {
+    border: solid 1px #000;
+    padding: 10px;
+  }
+}

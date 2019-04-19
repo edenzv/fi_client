@@ -1,0 +1,28 @@
+<table class="inside-table">
+  <thead *ngIf="tableData && tableData.length > 0">
+  <tr>
+    <th *ngFor="let key of objectKeys(tableData[0])">{{key}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngIf="isArray(tableData) && tableData && tableData.length > 0">
+    <tr *ngFor="let tbData of tableData">
+      <td *ngFor="let key of objectKeys(tbData)">
+        <app-re-table [tableData]="tbData[key]" *ngIf="isTable(tbData[key])"></app-re-table>
+        <div *ngIf="!isTable(tbData[key])">{{tbData[key]}}</div>
+      </td>
+    </tr>
+  </ng-container>
+  <ng-container *ngIf="!isArray(tableData) && isObject(tableData)">
+    <tr *ngFor="let tbDataKey of objectKeys(tableData)">
+      <td *ngIf="!isTable(tableData[tbDataKey])">{{tbDataKey}}</td>
+      <td *ngIf="!isTable(tableData[tbDataKey])">{{tableData[tbDataKey]}}</td>
+      <td *ngIf="isTable(tableData[tbDataKey])" [attr.colspan]="tableData[tbDataKey].length">
+        <div>{{tbDataKey}}</div>
+        <app-re-table [tableData]="tableData[tbDataKey]"></app-re-table>
+      </td>
+
+    </tr>
+  </ng-container>
+  </tbody>
+</table>
