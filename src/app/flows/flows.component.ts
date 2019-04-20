@@ -29,7 +29,7 @@ export interface IFiModel {
 })
 export class FlowsComponent implements OnInit {
   @ViewChild('file') file;
-  displayedColumns: string[] = ['select', 'number', 'label', 'status', 'download', 'delete'];
+  displayedColumns: string[] = ['select', 'number', 'label', 'status', 'download'];
   selection = new SelectionModel<any>(true, []);
   dataSource: any;
   fileTypes: any[] = [
