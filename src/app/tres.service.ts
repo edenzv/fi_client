@@ -111,8 +111,7 @@ export class TresService {
   }
 
   downloadFi(id: string) {
-    const baseUrl = `http://localhost:8080/api/fronted/fi/${id}/fidoc/`;
-    return this.http.get(baseUrl, { responseType: 'blob' });
+    return this.http.get(`${this.frontendApi}/fi/${id}/fidoc/`, { responseType: 'blob' });
   }
 
   export(data: any) {
