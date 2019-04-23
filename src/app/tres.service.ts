@@ -111,11 +111,18 @@ export class TresService {
   }
 
   downloadFi(id: string) {
-    return this.http.get<any>(`${this.frontendApi}/fi/${id}/fiDoc/`);
+    const baseUrl = `http://localhost:8080/api/fronted/fi/${id}/fidoc/`;
+    return this.http.get(baseUrl, { responseType: 'blob' });
   }
 
   export(data: any) {
     // return this.http.post<any>(`${this.frontendApi}/export`, data, { responseType: 'arraybuffer' });
     return this.http.post<any>(`${this.frontendApi}/export`, data);
+  }
+
+  addOcr(file: any) {
+    const body = new FormData();
+    body.append('fiImage', file, file.name);
+    return this.http.post(`${this.frontendApi}/ocr/`, body, { responseType: 'blob' });
   }
 }

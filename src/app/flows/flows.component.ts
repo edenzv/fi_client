@@ -29,6 +29,7 @@ export interface IFiModel {
 })
 export class FlowsComponent implements OnInit {
   @ViewChild('file') file;
+  @ViewChild('fileOcr') fileOcr;
   displayedColumns: string[] = ['select', 'number', 'label', 'status', 'download'];
   selection = new SelectionModel<any>(true, []);
   dataSource: any;
@@ -40,6 +41,7 @@ export class FlowsComponent implements OnInit {
   chooseUpload = false;
   canUpload = false;
   uploading = false;
+  uploadingOcr = false;
   ndId: string;
   ndParentId: string;
   treId: string;
@@ -154,39 +156,10 @@ export class FlowsComponent implements OnInit {
       });
   }
 
-  public getFile(fi: any): Observable<Blob> {
-    // const options = { responseType: 'blob' }; there is no use of this
-    const baseUrl = 'http://localhost:8080/api/fronted/fi/' + fi.ID + '/fidoc/';
-    // const headers = new HttpHeaders().set('authorization','Bearer '+token);
-    return this.http.get(baseUrl, { responseType: 'blob' });
-  }
-
   public download(fi: any): void {
-    this.getFile(fi)
-      .subscribe(x => {
-        const newBlob = new Blob([x], { type: 'application/msword' });
-
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveOrOpenBlob(newBlob);
-          return;
-        }
-
-        // For other browsers:
-        // Create a link pointing to the ObjectURL containing the blob.
-        const data = window.URL.createObjectURL(newBlob);
-
-        const link = document.createElement('a');
-        link.href = data;
-        link.download = 'fiDoc.doc';
-        // this is necessary as link.click() does not work on the latest firefox
-        link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-
-        setTimeout(() => {
-          // For Firefox it is necessary to delay revoking the ObjectURL
-          window.URL.revokeObjectURL(data);
-          link.remove();
-        }, 100);
-      });
+    this.tresService.downloadFi(fi.ID).subscribe(x => {
+      this.downloadFileByType(x, 'application/msword');
+    });
   }
 
   exportSelected() {
@@ -214,6 +187,52 @@ export class FlowsComponent implements OnInit {
       error => {
         console.error(error);
       });
+  }
+
+  addOcr() {
+    this.fileOcr.nativeElement.click();
+  }
+
+  uploadOcr() {
+    if (this.fileOcr && this.fileOcr.nativeElement && this.fileOcr.nativeElement.files[0]) {
+      this.uploadingOcr = true;
+      this.tresService.addOcr(this.fileOcr.nativeElement.files[0]).subscribe(
+        (file: any) => {
+          this.uploadingOcr = false;
+          this.fileOcr.nativeElement.value = '';
+          this.downloadFileByType(file, 'application/msword');
+        },
+        error => {
+          this.uploading = false;
+          console.error(error);
+          this.fileOcr.nativeElement.value = '';
+        });
+    }
+  }
+
+  private downloadFileByType(file: any, type: string) {
+    const newBlob = new Blob([file], { type });
+
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(newBlob);
+      return;
+    }
+
+    // For other browsers:
+    // Create a link pointing to the ObjectURL containing the blob.
+    const data = window.URL.createObjectURL(newBlob);
+
+    const link = document.createElement('a');
+    link.href = data;
+    link.download = 'fiDoc.doc';
+    // this is necessary as link.click() does not work on the latest firefox
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+
+    setTimeout(() => {
+      // For Firefox it is necessary to delay revoking the ObjectURL
+      window.URL.revokeObjectURL(data);
+      link.remove();
+    }, 100);
   }
 
   downloadFile(data: any, type: string) {

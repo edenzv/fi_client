@@ -1,5 +1,19 @@
 <div class="flows">
-  <div class="test"></div>
+  <div class="ocr-wrapper">
+    <input
+      type="file"
+      #fileOcr
+      style="display: none"
+      (change)="uploadOcr()"
+      accept="image/*"
+      required
+    />
+    <button [disabled]="uploadingOcr" mat-raised-button color="primary" class="add-ocr-btn"
+            (click)="addOcr()">
+      Add ocr
+    </button>
+    <mat-spinner *ngIf="uploadingOcr" diameter="25"></mat-spinner>
+  </div>
   <br>
   <div class="buttons-bar">
     <div class="upload-file">
@@ -19,7 +33,7 @@
         #file
         style="display: none"
         (change)="upload()"
-        accept=".docx"
+        accept=".docx,.doc"
         required
       />
       <button *ngIf="chooseUpload" [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn"
@@ -75,7 +89,7 @@
     <ng-container matColumnDef="download">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
-        <button mat-raised-button (click)="download(element)">Download</button>
+        <button mat-raised-button (click)="download(element); $event.stopPropagation();">Download</button>
       </td>
     </ng-container>
 
