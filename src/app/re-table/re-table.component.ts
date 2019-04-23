@@ -27,4 +27,3 @@ export class ReTableComponent implements OnInit {
     return (obj !== undefined && obj !== null) && (this.isArray(obj) || this.isObject(obj));
   }
 }
-
