@@ -1,12 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AuthenticationService } from '../_services';
 import { ChecklistDatabaseService, TodoItemFlatNode, TodoItemNode } from '../checklist-database.service';
-import { ITre } from '../tres.service';
+import { INdParent, ITre } from '../tres.service';
 
 @Component({
   selector: 'app-user-page',
@@ -15,6 +15,7 @@ import { ITre } from '../tres.service';
   providers: [ChecklistDatabaseService]
 })
 export class UserPageComponent {
+  @ViewChild('treeSelector') tree: any;
 
   selectedNode: TodoItemFlatNode;
 
@@ -56,6 +57,8 @@ export class UserPageComponent {
 
   isExpandable = (node: TodoItemFlatNode) => node.expandable;
 
+  isEditMode = (node: TodoItemFlatNode) => node.editMode;
+
   getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
 
   hasChild = (_: number, nodeData: TodoItemFlatNode) => nodeData.expandable;
@@ -72,8 +75,10 @@ export class UserPageComponent {
                      : new TodoItemFlatNode();
     flatNode.id = node.id;
     flatNode.description = node.description;
+    flatNode.data = node.data;
     flatNode.item = node.item;
     flatNode.level = level;
+    flatNode.editMode = false;
     flatNode.expandable = !!node.children;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
@@ -165,6 +170,11 @@ export class UserPageComponent {
       });
   }
 
+  editNode() {
+    const node = this.selectedNode;
+    node.editMode = true;
+  }
+
   /** Select the category so we can insert the new item. */
   addNewItem(node: TodoItemFlatNode) {
     const parentNode = this.flatNodeMap.get(node);
@@ -183,6 +193,29 @@ export class UserPageComponent {
     const nestedNode = this.flatNodeMap.get(node);
     const flatParentNode = this.getParentNode(node);
     const parentNode = this.flatNodeMap.get(flatParentNode);
-    this.database.updateItem(nestedNode!, projName, itemDescription, node.level, parentNode.id);
+    this.database.addItem(nestedNode!, projName, itemDescription, node.level, parentNode.id);
+  }
+
+  updateNode(node: TodoItemFlatNode, projName: string, itemDescription: string) {
+    const nestedNode = this.flatNodeMap.get(node);
+    const originalLbl = nestedNode.data.lbl;
+    const originalDes = nestedNode.data.des;
+    nestedNode.data.lbl = projName;
+    nestedNode.data.des = itemDescription;
+    (this.database.updateItem(nestedNode!, node.level) as any).subscribe(
+      (data) => {
+        node.editMode = false;
+        node.description = data.des;
+        node.item = data.lbl;
+      },
+      error => {
+        nestedNode.data.lbl = originalLbl;
+        nestedNode.data.des = originalDes;
+        console.error(error);
+      });
+  }
+
+  cancelUpdate(node: TodoItemFlatNode) {
+    node.editMode = false;
   }
 }

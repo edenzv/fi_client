@@ -9,13 +9,29 @@
 <mat-sidenav-container autosize="true" class="example-container">
   <mat-sidenav #sidenav mode="side" opened class="example-sidenav">
     <button mat-raised-button disabled="{{!selectedNode}}" (click)="deleteNode()">Delete</button>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <button class="edit-button" mat-raised-button disabled="{{!selectedNode}}" (click)="editNode()">Edit</button>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" #treeSelector>>
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
         <button mat-icon-button disabled></button>
-        <mat-checkbox class="checklist-leaf-node"
+        <mat-checkbox *ngIf="!node.editMode"
+                      class="checklist-leaf-node"
                       [checked]="checklistSelection.isSelected(node)"
                       matTooltip="{{node.description}}"
                       (change)="itemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+        <div *ngIf="node.editMode">
+          <div class="project-inputs">
+            <mat-form-field>
+              <input matInput #projNameToUpdate placeholder="Project Name">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput #DescToUpdate placeholder="Description">
+            </mat-form-field>
+            <div class="add-projects-buttons">
+              <button mat-button (click)="updateNode(node, projNameToUpdate.value, DescToUpdate.value)">Update</button>
+              <button mat-button (click)="cancelUpdate(node)">Cancel</button>
+            </div>
+          </div>
+        </div>
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
@@ -35,18 +51,35 @@
       </mat-tree-node>
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-        <button mat-icon-button matTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.filename">
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
-        </button>
-        <mat-checkbox *ngIf="node.level !== 0"
-                      [checked]="checklistSelection.isSelected(node)"
-                      matTooltip="{{node.description}}"
-                      (change)="itemSelectionToggle(node)">{{node.item}}</mat-checkbox>
-        <label *ngIf="node.level === 0">{{node.item}}</label>
-        <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+        <div *ngIf="!node.editMode">
+          <button mat-icon-button matTreeNodeToggle
+                  [attr.aria-label]="'toggle ' + node.filename">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          <mat-checkbox *ngIf="node.level !== 0"
+                        [checked]="checklistSelection.isSelected(node)"
+                        matTooltip="{{node.description}}"
+                        (change)="itemSelectionToggle(node)">{{node.item}}</mat-checkbox>
+          <label *ngIf="node.level === 0">{{node.item}}</label>
+          <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+        </div>
+        <div *ngIf="node.editMode">
+          <button mat-icon-button disabled></button>
+          <div class="project-inputs">
+            <mat-form-field>
+              <input matInput #projNameToUpdate placeholder="Project Name">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput #DescToUpdate placeholder="Description">
+            </mat-form-field>
+            <div class="add-projects-buttons">
+              <button mat-button (click)="updateNode(node, projNameToUpdate.value, DescToUpdate.value)">Update</button>
+              <button mat-button (click)="cancelUpdate(node)">Cancel</button>
+            </div>
+          </div>
+        </div>
       </mat-tree-node>
     </mat-tree>
   </mat-sidenav>
