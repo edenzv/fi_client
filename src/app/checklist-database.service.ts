@@ -11,15 +11,18 @@ export class TodoItemNode {
   children?: TodoItemNode[];
   item: string;
   description?: string;
+  data?: any;
 }
 
 /** Flat to-do item node with expandable and level information */
 export class TodoItemFlatNode {
   id?: string;
   description?: string;
+  data: any;
   item: string;
   level: number;
   expandable: boolean;
+  editMode: boolean;
 }
 
 /**
@@ -72,19 +75,22 @@ export class ChecklistDatabaseService {
               id: tre.ID,
               children: {},
               description: tre.des,
+              data: tre
             };
             tre.ndParents.forEach(ndParent => {
               const ndParentKey = `${ndParent.lbl}`;
               mainParentChildren[treKey].children[ndParentKey] = {
                 id: ndParent.ID,
                 description: ndParent.des,
-                children: {}
+                children: {},
+                data: ndParent
               };
               ndParent.ND.forEach(nd => {
                 const ndKey = `${nd.lbl}`;
                 mainParentChildren[treKey].children[ndParentKey].children[ndKey] = {
                   id: nd.ID,
                   description: nd.des,
+                  data: nd
                 };
               });
             });
@@ -114,6 +120,7 @@ export class ChecklistDatabaseService {
       node.item = key;
       node.id = value.id;
       node.description = value.description;
+      node.data = value.data;
 
       if (children != null) {
         if (typeof children === 'object') {
@@ -162,7 +169,7 @@ export class ChecklistDatabaseService {
     }
   }
 
-  updateItem(node: TodoItemNode, name: string, description: string, level: number, parentId?: string) {
+  addItem(node: TodoItemNode, name: string, description: string, level: number, parentId?: string) {
     node.item = name;
     if (level === 1) {
       this.tresService.addTre(name, description).subscribe(
@@ -196,5 +203,20 @@ export class ChecklistDatabaseService {
         });
     }
 
+  }
+
+  updateItem(node: TodoItemNode, level: number) {
+    node.item = name;
+    const copyNodeData = JSON.parse(JSON.stringify(node.data));
+    if (level === 1) {
+      copyNodeData.ndParents = undefined;
+      return this.tresService.updateTre(node.id, copyNodeData);
+    } else if (level === 2) {
+      copyNodeData.ND = undefined;
+      return this.tresService.updateNdParent(node.id, copyNodeData);
+    } else if (level === 3) {
+      copyNodeData.FI = undefined;
+      return this.tresService.updateNd(node.id, copyNodeData);
+    }
   }
 }
