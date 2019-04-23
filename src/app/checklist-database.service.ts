@@ -176,6 +176,7 @@ export class ChecklistDatabaseService {
         (tre: ITre) => {
           node.id = tre.ID;
           node.description = tre.des;
+          node.data = tre;
           this.dataChange.next(this.data);
         },
         error => {
@@ -186,6 +187,7 @@ export class ChecklistDatabaseService {
         (ndParent: INdParent) => {
           node.id = ndParent.ID;
           node.description = ndParent.des;
+          node.data = ndParent;
           this.dataChange.next(this.data);
         },
         error => {
@@ -196,6 +198,7 @@ export class ChecklistDatabaseService {
         (nd: INd) => {
           node.id = nd.ID;
           node.description = nd.des;
+          node.data = nd;
           this.dataChange.next(this.data);
         },
         error => {
