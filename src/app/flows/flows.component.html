@@ -83,7 +83,10 @@
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> Status</th>
-      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      <td mat-cell *matCellDef="let element">
+        <font *ngIf="element.status === 'success'" color="green"> {{element.status}} </font>
+        <font *ngIf="element.status !== 'success'" color="red"> {{element.status}} </font>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="download">
