@@ -109,7 +109,7 @@ export class FlowsComponent implements OnInit {
       return {
         number: index + 1,
         label: fi.lbl,
-        status: 'Success',
+        status: fi.status,
         ID: fi.ID,
         PG: fi.PG
       };
