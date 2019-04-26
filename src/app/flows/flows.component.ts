@@ -182,7 +182,7 @@ export class FlowsComponent implements OnInit {
     };
     this.tresService.export(data).subscribe(
       (result: any) => {
-        this.downloadFile(result, 'zip');
+        this.downloadFileByType(result, 'application/octet-stream', 'fis.zip');
       },
       error => {
         console.error(error);
@@ -200,7 +200,7 @@ export class FlowsComponent implements OnInit {
         (file: any) => {
           this.uploadingOcr = false;
           this.fileOcr.nativeElement.value = '';
-          this.downloadFileByType(file, 'application/msword');
+          this.downloadFileByType(file, 'application/msword', 'ocr.doc');
         },
         error => {
           this.uploading = false;
@@ -210,7 +210,7 @@ export class FlowsComponent implements OnInit {
     }
   }
 
-  private downloadFileByType(file: any, type: string) {
+  private downloadFileByType(file: any, type: string, nameForDownload?: string) {
     const newBlob = new Blob([file], { type });
 
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
@@ -224,7 +224,7 @@ export class FlowsComponent implements OnInit {
 
     const link = document.createElement('a');
     link.href = data;
-    link.download = 'fiDoc.doc';
+    link.download = nameForDownload ? nameForDownload : 'fiDoc.doc';
     // this is necessary as link.click() does not work on the latest firefox
     link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
 

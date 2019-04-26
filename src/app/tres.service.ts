@@ -133,8 +133,7 @@ export class TresService {
   }
 
   export(data: any) {
-    // return this.http.post<any>(`${this.frontendApi}/export`, data, { responseType: 'arraybuffer' });
-    return this.http.post<any>(`${this.frontendApi}/export`, data);
+    return this.http.post(`${this.frontendApi}/export`, data, { responseType: 'blob' });
   }
 
   addOcr(file: any) {
