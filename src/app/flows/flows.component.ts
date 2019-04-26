@@ -258,6 +258,7 @@ export class FlowsComponent implements OnInit {
             console.error(error);
           });
       }
+      this.selection.clear();
     }
   }
 }
