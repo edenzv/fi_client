@@ -21,10 +21,10 @@
         <div *ngIf="node.editMode">
           <div class="project-inputs">
             <mat-form-field>
-              <input matInput #projNameToUpdate placeholder="Project Name">
+              <input matInput #projNameToUpdate placeholder="{{keyInputPlaceholder(node.level)}}" value="{{node.item}}">
             </mat-form-field>
             <mat-form-field>
-              <input matInput #DescToUpdate placeholder="Description">
+              <input matInput #DescToUpdate placeholder="Description" value="{{node.description}}">
             </mat-form-field>
             <div class="add-projects-buttons">
               <button mat-button (click)="updateNode(node, projNameToUpdate.value, DescToUpdate.value)">Update</button>
@@ -38,7 +38,7 @@
         <button mat-icon-button disabled></button>
         <div class="project-inputs">
           <mat-form-field>
-            <input matInput #projName placeholder="Project Name">
+            <input matInput #projName placeholder="{{keyInputPlaceholder(node.level)}}">
           </mat-form-field>
           <mat-form-field>
             <input matInput #Desc placeholder="Description">
@@ -69,10 +69,10 @@
           <button mat-icon-button disabled></button>
           <div class="project-inputs">
             <mat-form-field>
-              <input matInput #projNameToUpdate placeholder="Project Name">
+              <input matInput #projNameToUpdate placeholder="{{keyInputPlaceholder(node.level)}}" value="{{node.item}}">
             </mat-form-field>
             <mat-form-field>
-              <input matInput #DescToUpdate placeholder="Description">
+              <input matInput #DescToUpdate placeholder="Description" value="{{node.description}}">
             </mat-form-field>
             <div class="add-projects-buttons">
               <button mat-button (click)="updateNode(node, projNameToUpdate.value, DescToUpdate.value)">Update</button>

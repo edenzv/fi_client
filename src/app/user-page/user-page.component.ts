@@ -218,4 +218,20 @@ export class UserPageComponent {
   cancelUpdate(node: TodoItemFlatNode) {
     node.editMode = false;
   }
+
+  keyInputPlaceholder(level) {
+    switch (level) {
+      case 1:
+        return 'Project Name';
+        break;
+      case 2:
+        return 'Module Name';
+        break;
+      case 3:
+        return 'Part Name';
+        break;
+      default:
+        break;
+    }
+  }
 }
