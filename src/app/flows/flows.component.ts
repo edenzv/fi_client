@@ -35,7 +35,6 @@ export class FlowsComponent implements OnInit {
   dataSource: any;
   fileTypes: any[] = [
     { value: 'yes_no', viewValue: 'yes_no' },
-    { value: 'flowchart', viewValue: 'flowchart' },
     { value: 'table', viewValue: 'table' }
   ];
   chooseUpload = false;
@@ -111,7 +110,7 @@ export class FlowsComponent implements OnInit {
         label: fi.lbl,
         status: fi.status,
         ID: fi.ID,
-        PG: fi.PG
+        pgBounderies: fi.pgBounderies
       };
     });
 
