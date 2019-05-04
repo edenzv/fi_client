@@ -5,6 +5,7 @@ import { AdminPageComponent } from './admin-page';
 import { FlowsComponent } from './flows/flows.component';
 import { LoginComponent } from './login';
 import { AuthGuard } from './_guards';
+import { OcrPageComponent } from './ocr-page/ocr-page.component';
 import { UserPageComponent } from './user-page/user-page.component';
 
 const appRoutes: Routes = [
@@ -12,7 +13,8 @@ const appRoutes: Routes = [
   { path: 'add', component: AddUserComponent, data: { roles: ['admin'] }, canActivate: [AuthGuard] },
   { path: '', component: UserPageComponent, data: { roles: ['user'] }, canActivate: [AuthGuard],
     children: [
-      { path: 'flows', component: FlowsComponent }
+      { path: 'flows', component: FlowsComponent },
+      { path: 'ocr', component: OcrPageComponent }
     ]},
   { path: 'login', component: LoginComponent },
 

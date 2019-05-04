@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
                   if (data.userName === 'admin') {
                     this.router.navigate(['admin']);
                   } else {
-                    this.router.navigate(['']);
+                    this.router.navigate(['/flows']);
                   }
                 },
                 error => {

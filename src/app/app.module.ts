@@ -23,6 +23,7 @@ import { LoginComponent } from './login';
 import { UserPageComponent } from './user-page/user-page.component';
 import { FlowsComponent } from './flows/flows.component';
 import { ReTableComponent } from './re-table/re-table.component';
+import { OcrPageComponent } from './ocr-page/ocr-page.component';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { ReTableComponent } from './re-table/re-table.component';
     UserPageComponent,
     FlowsComponent,
     ReTableComponent,
+    OcrPageComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

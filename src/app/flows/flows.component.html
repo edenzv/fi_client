@@ -1,19 +1,7 @@
-<div class="flows">
-  <div class="ocr-wrapper">
-    <input
-      type="file"
-      #fileOcr
-      style="display: none"
-      (change)="uploadOcr()"
-      accept="image/*"
-      required
-    />
-    <button [disabled]="uploadingOcr" mat-raised-button color="primary" class="add-ocr-btn"
-            (click)="addOcr()">
-      Add OCR
-    </button>
-    <mat-spinner *ngIf="uploadingOcr" diameter="25"></mat-spinner>
-  </div>
+<div class="default-message" *ngIf="ndId === undefined">
+  Please select one of the FIs
+</div>
+<div class="flows" *ngIf="ndId !== undefined">
   <br>
   <div class="buttons-bar">
     <div class="upload-file">

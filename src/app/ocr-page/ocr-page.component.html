@@ -1,0 +1,15 @@
+<div class="ocr-wrapper">
+  <input
+    type="file"
+    #fileOcr
+    style="display: none"
+    (change)="uploadOcr()"
+    accept="image/*"
+    required
+  />
+  <button [disabled]="uploadingOcr" mat-raised-button color="primary" class="add-ocr-btn"
+          (click)="addOcr()">
+    Add OCR
+  </button>
+  <mat-spinner *ngIf="uploadingOcr" diameter="25"></mat-spinner>
+</div>

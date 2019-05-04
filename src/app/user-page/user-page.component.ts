@@ -234,4 +234,26 @@ export class UserPageComponent {
         break;
     }
   }
+
+  navigateOcr() {
+    this.router.navigate(['ocr']);
+  }
+
+  navigateFi() {
+    if (this.selectedNode && this.selectedNode.level === 3) {
+      const currentNode = this.flatNodeMap.get(this.selectedNode);
+      const ndParent = this.getParentNode(this.selectedNode);
+      const tre = this.getParentNode(ndParent);
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          ndId: currentNode.id,
+          ndParentId: ndParent.id,
+          treId: tre.id
+        }
+      };
+      this.router.navigate(['flows'], navigationExtras);
+    } else {
+      this.router.navigate(['flows']);
+    }
+  }
 }
