@@ -26,4 +26,12 @@ export class ReTableComponent implements OnInit {
   isTable(obj) {
     return (obj !== undefined && obj !== null) && (this.isArray(obj) || this.isObject(obj));
   }
+
+  getCellColor(key, value) {
+    if (key === 'Status' && value !== 'success') {
+      return 'red';
+    }
+
+    return '';
+  }
 }
