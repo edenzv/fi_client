@@ -7,9 +7,9 @@
   <tbody>
   <ng-container *ngIf="isArray(tableData) && tableData && tableData.length > 0">
     <tr *ngFor="let tbData of tableData">
-      <td *ngFor="let key of objectKeys(tbData)">
+      <td *ngFor="let key of objectKeys(tbData)" [style.color]="getLineColor(tbData)">
         <app-re-table [tableData]="tbData[key]" *ngIf="isTable(tbData[key])"></app-re-table>
-        <div *ngIf="!isTable(tbData[key])" [style.color]="getCellColor(key, tbData[key])">{{tbData[key]}}</div>
+        <div *ngIf="!isTable(tbData[key])">{{tbData[key]}}</div>
       </td>
     </tr>
   </ng-container>

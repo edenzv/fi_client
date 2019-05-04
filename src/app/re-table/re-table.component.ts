@@ -34,4 +34,12 @@ export class ReTableComponent implements OnInit {
 
     return '';
   }
+
+  getLineColor(tableRow) {
+    if (Object.keys(tableRow).some(p => p === 'Status' && tableRow[p] !== 'success')) {
+     return 'red';
+    }
+
+    return '';
+  }
 }
