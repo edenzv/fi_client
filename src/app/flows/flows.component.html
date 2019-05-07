@@ -34,7 +34,7 @@
       <button class="export-selected-btn" matTooltip="Get selected report file" [disabled]="!selection.hasValue()" mat-raised-button (click)="reportSelected()">
         Report
       </button>
-      <button class="export-selected-btn" matTooltip="Delete selected FI" [disabled]="!selection.hasValue()" mat-raised-button (click)="DeleteSelected()">
+      <button class="export-selected-btn" matTooltip="Delete selected FI" [disabled]="!selection.hasValue()" mat-raised-button (click)="deleteSelected()">
         Delete
       </button>
       <button class="export-selected-btn" matTooltip="Export to XML (VIEW system format)" [disabled]="!selection.hasValue()" mat-raised-button (click)="exportSelected()">

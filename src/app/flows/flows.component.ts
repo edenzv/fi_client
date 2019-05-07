@@ -224,7 +224,7 @@ export class FlowsComponent implements OnInit {
     }
   }
 
-  DeleteSelected() {
+  deleteSelected() {
     const selectedFIIds = this.selection.selected.map(row => {
       return { ID: row.ID};
     });
@@ -235,7 +235,8 @@ export class FlowsComponent implements OnInit {
       });
       forkJoin(deleteObsList).subscribe(
         (data: INd[]) => {
-          this.initDataSource(data[data.length - 1]);
+          this.getFiList();
+          // this.initDataSource(data[data.length - 1]);
           this.selection.clear();
         },
         error => {
