@@ -189,6 +189,34 @@ export class FlowsComponent implements OnInit {
       });
   }
 
+  reportSelected() {
+    const selectedFIIds = this.selection.selected.map(row => {
+      return { ID: row.ID};
+    });
+    const data = {
+      ID: this.treId,
+      ndParents: [
+        {
+          ID: this.ndParentId,
+          ND: [
+            {
+              ID: this.ndId,
+              FI: selectedFIIds
+            }
+          ]
+        }
+      ]
+    };
+    this.tresService.report(data).subscribe(
+      (result: any) => {
+        downloadFileByType(result, 'application/octet-stream', 'report.pdf');
+      },
+      error => {
+        console.error(error);
+      });
+  }
+
+
   downloadFile(data: any, type: string) {
     const blob = new Blob([data], { type: type.toString() });
     const url = window.URL.createObjectURL(blob);

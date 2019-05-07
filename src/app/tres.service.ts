@@ -48,6 +48,10 @@ export interface INdParent {
   ND: Array<INd>;
 }
 
+export interface OcrProviders {
+  Ocrs: Array<string>;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -133,7 +137,15 @@ export class TresService {
   }
 
   export(data: any) {
-    return this.http.post(`${this.frontendApi}/export`, data, { responseType: 'blob' });
+    return this.http.post(`${this.frontendApi}/tre/export`, data, { responseType: 'blob' });
+  }
+
+  report(data: any) {
+    return this.http.post(`${this.frontendApi}/tre/export/report`, data, { responseType: 'blob' });
+  }
+
+  getOcrProvider() {
+    return this.http.get<OcrProviders>(`${this.frontendApi}/ocr/`);
   }
 
   addOcr(file: any) {

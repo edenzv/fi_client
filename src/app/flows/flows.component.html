@@ -31,7 +31,7 @@
       <mat-spinner *ngIf="uploading" diameter="25"></mat-spinner>
     </div>
     <div>
-      <button class="export-selected-btn" matTooltip="Get selected report file" [disabled]="!selection.hasValue()" mat-raised-button (click)="DeleteSelected()">
+      <button class="export-selected-btn" matTooltip="Get selected report file" [disabled]="!selection.hasValue()" mat-raised-button (click)="reportSelected()">
         Report
       </button>
       <button class="export-selected-btn" matTooltip="Delete selected FI" [disabled]="!selection.hasValue()" mat-raised-button (click)="DeleteSelected()">
