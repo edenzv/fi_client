@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { downloadFileByType } from '../flows/flows.component';
 import { TresService } from '../tres.service';
 
@@ -10,20 +11,33 @@ import { TresService } from '../tres.service';
 export class OcrPageComponent implements OnInit {
   @ViewChild('fileOcr') fileOcr;
   uploadingOcr = false;
+  fileType: string;
   uploading = false;
+  canUpload = false;
+  fileTypes: any[] = [];
+
   constructor(private tresService: TresService) { }
 
   ngOnInit() {
+    this.tresService.getOcrTypes()
+      .subscribe((result: Array<string>) => {
+        this.fileTypes = result.map(p => ({value: p, viewValue: p }));
+    });
   }
 
   addOcr() {
     this.fileOcr.nativeElement.click();
   }
 
+  fileTypeSelected($event: any) {
+    this.canUpload = true;
+    this.fileType = $event.value;
+  }
+
   uploadOcr() {
     if (this.fileOcr && this.fileOcr.nativeElement && this.fileOcr.nativeElement.files[0]) {
       this.uploadingOcr = true;
-      this.tresService.addOcr(this.fileOcr.nativeElement.files[0]).subscribe(
+      this.tresService.addOcr(this.fileOcr.nativeElement.files[0], this.fileType).subscribe(
         (file: any) => {
           this.uploadingOcr = false;
           this.fileOcr.nativeElement.value = '';

@@ -7,10 +7,6 @@
     accept="image/*"
     required
   />
-  <button [disabled]="uploadingOcr" mat-raised-button color="primary" class="add-ocr-btn"
-          (click)="addOcr()">
-    Add OCR
-  </button>
 
   <mat-form-field>
     <mat-label>OCR type</mat-label>
@@ -28,7 +24,7 @@
     accept="image/*"
     required
   />
-  <button [disabled]="!canUpload || uploading" mat-raised-button color="primary" class="add-files-btn"
+  <button [disabled]="!canUpload || uploadingOcr" mat-raised-button color="primary" class="add-files-btn"
           (click)="addOcr()">
     Add OCR
   </button>

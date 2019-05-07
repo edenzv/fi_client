@@ -148,9 +148,13 @@ export class TresService {
     return this.http.get<OcrProviders>(`${this.frontendApi}/ocr/`);
   }
 
-  addOcr(file: any) {
+  addOcr(file: any, fileType: string) {
     const body = new FormData();
     body.append('fiImage', file, file.name);
-    return this.http.post(`${this.frontendApi}/ocr/`, body, { responseType: 'blob' });
+    return this.http.post(`${this.frontendApi}/ocr/${fileType}`, body, { responseType: 'blob' });
+  }
+
+  getOcrTypes() {
+    return this.http.get(`${this.frontendApi}/ocr/`);
   }
 }

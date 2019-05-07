@@ -1,13 +1,11 @@
-import { Observable, of, from } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IUser } from '../_services';
-import { IFi, INd, INdParent, TresService } from '../tres.service';
+import { INd, TresService } from '../tres.service';
 
 export interface IFiModel {
   number: number;
@@ -231,16 +229,18 @@ export class FlowsComponent implements OnInit {
       return { ID: row.ID};
     });
     if (confirm('Are you sure delete selected?')) {
-      for (let fi of selectedFIIds) {
-        this.tresService.deleteFi(fi.ID).subscribe(
-          (data: INd) => {
-            this.initDataSource(data);
-          },
-          error => {
-            console.error(error);
-          });
-      }
-      this.selection.clear();
+      const deleteObsList = [];
+      selectedFIIds.forEach(p => {
+        deleteObsList.push(this.tresService.deleteFi(p.ID));
+      });
+      forkJoin(deleteObsList).subscribe(
+        (data: INd[]) => {
+          this.initDataSource(data[data.length - 1]);
+          this.selection.clear();
+        },
+        error => {
+          console.error(error);
+        });
     }
   }
 }
