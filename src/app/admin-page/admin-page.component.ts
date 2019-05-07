@@ -9,7 +9,7 @@ import { IUser, UserService } from '../_services';
     styleUrls: ['./admin-page.component.scss']
   })
 export class AdminPageComponent implements OnInit {
-  displayedColumns: string[] = ['userName', 'password', 'firstName', 'lastName', 'role', 'edit', 'delete'];
+  displayedColumns: string[] = ['userName', 'firstName', 'lastName', 'role', 'edit', 'delete'];
   users: Array<IUser>;
 
   constructor(private userService: UserService,

@@ -1,33 +1,35 @@
-<div class="ocr-wrapper">
-  <input
-    type="file"
-    #fileOcr
-    style="display: none"
-    (change)="uploadOcr()"
-    accept="image/*"
-    required
-  />
+<div class="ocr">
+  <div class="ocr-wrapper">
+    <input
+      type="file"
+      #fileOcr
+      style="display: none"
+      (change)="uploadOcr()"
+      accept="image/*"
+      required
+    />
 
-  <mat-form-field>
-    <mat-label>OCR type</mat-label>
-    <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
-      <mat-option *ngFor="let type of fileTypes" [value]="type.value">
-        {{type.viewValue}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <input
-    type="file"
-    #fileOcr
-    style="display: none"
-    (change)="uploadOcr()"
-    accept="image/*"
-    required
-  />
-  <button [disabled]="!canUpload || uploadingOcr" mat-raised-button color="primary" class="add-files-btn"
-          (click)="addOcr()">
-    Add OCR
-  </button>
+    <mat-form-field>
+      <mat-label>OCR type</mat-label>
+      <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
+        <mat-option *ngFor="let type of fileTypes" [value]="type.value">
+          {{type.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <input
+      type="file"
+      #fileOcr
+      style="display: none"
+      (change)="uploadOcr()"
+      accept="image/*"
+      required
+    />
+    <button [disabled]="!canUpload || uploadingOcr" mat-raised-button color="primary" class="add-ocr-btn"
+            (click)="addOcr()">
+      Add OCR
+    </button>
 
-  <mat-spinner *ngIf="uploadingOcr" diameter="25"></mat-spinner>
+    <mat-spinner *ngIf="uploadingOcr" diameter="25"></mat-spinner>
+  </div>
 </div>
