@@ -1,14 +1,5 @@
 <div class="ocr">
   <div class="ocr-wrapper">
-    <input
-      type="file"
-      #fileOcr
-      style="display: none"
-      (change)="uploadOcr()"
-      accept="image/*"
-      required
-    />
-
     <mat-form-field>
       <mat-label>OCR type</mat-label>
       <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
@@ -22,11 +13,11 @@
       #fileOcr
       style="display: none"
       (change)="uploadOcr()"
-      accept="image/*"
+      accept="image/*,.zip"
       required
     />
-    <button [disabled]="!canUpload || uploadingOcr" mat-raised-button color="primary" class="add-ocr-btn"
-            (click)="addOcr()">
+    <button [disabled]="!canUpload || uploadingOcr" matTooltip="Supported image and zip files" mat-raised-button color="primary" class="add-ocr-btn"
+            (click)="addOcr()" >
       Add OCR
     </button>
 
