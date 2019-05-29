@@ -1,4 +1,9 @@
 ﻿<mat-toolbar class="example-header" color="primary">
+  <div>
+    <button type="button" mat-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
     <p><a mat-button [routerLink]="['/login']">Logout</a></p>
 </mat-toolbar>
 <br><br><br>
@@ -27,12 +32,12 @@
 
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element"><button mat-raised-button *ngIf="element.userName!='admin' && element.userName!='figenerator'" (click)="edit(element)">Edit</button></td>
+      <td mat-cell *matCellDef="let element"><button mat-raised-button *ngIf="element.userName!='admin'" (click)="edit(element)">Edit</button></td>
     </ng-container>
 
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element"><button mat-raised-button *ngIf="element.userName!='admin' && element.userName!='figenerator'" (click)="deleteUser(element)">Delete</button></td>
+      <td mat-cell *matCellDef="let element"><button mat-raised-button *ngIf="element.userName!='admin'" (click)="deleteUser(element)">Delete</button></td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

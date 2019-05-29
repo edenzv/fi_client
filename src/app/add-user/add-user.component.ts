@@ -15,11 +15,8 @@ export class AddUserComponent implements OnInit {
   public loading = false;
   editMode = false;
   roles: any[] = [
-    { value: 'user', viewValue: 'user' },
-    { value: 'provider', viewValue: 'provider' },
-    { value: 'admin', viewValue: 'admin' },
-    { value: 'viewer', viewValue: 'viewer' },
-    { value: 'generator', viewValue: 'generator' }
+    { value: 'user', viewValue: 'User' },
+    { value: 'generator', viewValue: 'Generator' }
   ];
   selectedRole: string;
   constructor(

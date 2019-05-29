@@ -1,8 +1,8 @@
 <div class="ocr">
   <div class="ocr-wrapper">
     <mat-form-field>
-      <mat-label>OCR type</mat-label>
-      <mat-select [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
+      <mat-label>OCR Provider</mat-label>
+      <mat-select matTooltip="Please select a OCR provider" [(value)]="fileType" (selectionChange)="fileTypeSelected($event)">
         <mat-option *ngFor="let type of fileTypes" [value]="type.value">
           {{type.viewValue}}
         </mat-option>
@@ -16,9 +16,9 @@
       accept="image/*,.zip"
       required
     />
-    <button [disabled]="!canUpload || uploadingOcr" matTooltip="Supported image and zip files" mat-raised-button color="primary" class="add-ocr-btn"
+    <button [disabled]="!canUpload || uploadingOcr" matTooltip="Select image file to convert (Supported images and zip)" mat-raised-button color="primary" class="add-ocr-btn"
             (click)="addOcr()" >
-      Add OCR
+      Add file
     </button>
 
     <mat-spinner *ngIf="uploadingOcr" diameter="25"></mat-spinner>
