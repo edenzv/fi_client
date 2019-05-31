@@ -130,6 +130,7 @@ export class FlowsComponent implements OnInit {
           this.uploading = false;
           this.chooseUpload = false;
           console.error(error);
+          alert(error);
           this.file.nativeElement.value = '';
         });
     }
